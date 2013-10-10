@@ -1,0 +1,10 @@
+{
+	"test_page": "setup.html",
+	"src_files": [
+		"client/*.js",
+		"spec/*.js"
+	],
+	"routes": {
+        "/require.js" : "node_modules/requirejs/require.js"
+	}
+}
