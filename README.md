@@ -37,7 +37,7 @@ module. Than it's transmitted to socket connection by query string. Check the co
 Once you know that authorization works correctly, you can rely on that fact and simply fake the authorization
 for the sake of client tests.
 
-Run the Test`em tool by running `testem` console. Thne simply navigate in browser of your choice to 
+Run the Test'em tool by running `testem` console. Thne simply navigate in browser of your choice to 
 `http://localhost:7357`.
 
 Issue here is that you cannot use superagent here to retrieve session cookie. This library just wraps the
