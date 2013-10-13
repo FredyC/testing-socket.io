@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+<title>Testing Socket.IO authorization</title>
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.8/require.min.js"></script>
+<script type="text/javascript">
+	require.config({
+		paths: {
+			io: '/socket.io/socket.io',
+			when: '/lib/when/when'
+		}
+	});
+
+	require( ["client/socket"], function(clientSocket) {
+		var h4 = document.getElementsByTagName("h4")[0];
+		clientSocket().then(
+			function(global) {
+				global.on('hello', function(sessionId) {
+					h4.innerHTML = "Successfully established socket connection with sessionID = "+sessionId;
+				});
+			},
+			function(err) {
+				h4.innerHTML("Failed establishing socket connection. Check console for details.");
+				console.error(err);
+			}
+		);
+	});
+</script>
+</head>
+<body>
+	<h3>Open dev tools and checkout console. Session cookie being sent to initiate socket connection.</h3>
+	<h4></h4>
+</body>
+</html>

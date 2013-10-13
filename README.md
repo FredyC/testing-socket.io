@@ -5,32 +5,41 @@ authorization with session cookies.
 
 ## Setup
 
-You need NodeJS installed. Run `npm install` to install dependencies.
+You need NodeJS installed. Run `npm install` to install dependencies. It would also useful to install some
+packages globally, otherwise you have to install them locally and reference on your own.
+
+`npm install -g testem mocha nodemon`
 
 ## Server
 
-Run `node server.js` to start the server. Or if you want to do some changes to the code, I recommend to install
-[NodeMon](https://github.com/remy/nodemon) by running `npm install -g nodemon`. Than you can simply run 
-`nodemon server.js`.
+Run `nodemon server.js` to start the server or simply `node server.js` if you like.
 
-## Running the tests
+Server is handling socket communication including authorization. Accessing `http://localhost:4040` in the 
+browser you see authorized socket connection being established. It even shows you sessionId sent back from
+the server.
 
-It's made with [Test`em](https://github.com/airportyh/testem) tool. You have now installed locally with NPM and
-you can simply run `node_modules/.bin/testem` from this directory. Or for easier access install it globally 
-`npm install -g testem`.
+## Testing the code
 
-Now simply open the browser of your choice and navigate to `http://localhost:7357`.
+Everything looks great, but once you want to test that code, you will have some trouble.
 
-## How it works
-Main issues comes from the fact, that you simply cannot receive session cookie from the server, read it by your
-code and most importantly, you cannot add it to XHR headers when initiating Socket.IO connection. Solution is 
-rather simple, but should work quite ok.
+### Authorization
 
-As I said, you cannot read session cookie value sent by server. Since your main concern is to have working socket
-connection and security is not really required for development, you can simply fake it.
+To check that authorization is working correctly, you don't need browser environment to that. You can simply
+run tests againts running server instance using Mocha.
 
-You can add query parameters when initiating socket connection by calling `io.connect()` method. You can add there
-whatever you want. Than on the server during authorization you can check that and authorize that connection.
+`mocha -R spec spec/socketAuth.js`
 
-I know, it's not some really surprising solution, but it works. If you know about better way, feel free to work this
-repo and show me.
+If you inspect code of that test closely, you can see that session cookie is retrieved through superagent
+module. Than it's transmitted to socket connection by query string. Check the comments in code about this.
+
+### Client connection
+
+Once you know that authorization works correctly, you can rely on that fact and simply fake the authorization
+for the sake of client tests.
+
+Run the Test`em tool by running `testem` console. Thne simply navigate in browser of your choice to 
+`http://localhost:7357`.
+
+Issue here is that you cannot use superagent here to retrieve session cookie. This library just wraps the
+built-in XMLHttpRequest object which is protected and session cookie cannot be read from it nor written.
+So in this case authorization is simply faked and you can focus on testing true client functionality.

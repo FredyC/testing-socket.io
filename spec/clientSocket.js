@@ -14,9 +14,12 @@ define(['client/socket', 'io', 'superagent', 'when'], function(
 			'auto connect': !!autoConnect // connect only when really needed
 		};
 
-		// add cookie to query object, since it cannot be added to XHR headers
+		// add devcookie to query object, since it cannot be added to XHR headers
 		// see: https://github.com/LearnBoost/socket.io-client/issues/344#issuecomment-25883056
 		options['query'] = "xs=devcookie";
+
+		// since the real authorization is already tested in socketAuth.js spec, this can be done
+		// much easier and in more transparent way
 
 		return clientSocket(options);
 	};
